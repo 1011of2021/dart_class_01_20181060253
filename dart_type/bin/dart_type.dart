@@ -51,3 +51,42 @@ void main() {
 }
 */
 //布尔
+/*
+不允许使用类似 if (nonbooleanValue) 或者 assert (nonbooleanValue) 
+这样的代码检查布尔值,应该总是显示地检查布尔值
+void main() {
+  var fullName = '';
+  assert(fullName.isEmpty);
+  var hitPoints = 0;
+  assert(hitPoints <= 0);
+  var unicorn;
+  assert(unicorn == null);
+}
+*/
+//数组--list
+/*
+void main(){
+  /*使用扩展操作符（...）
+  将一个 List 中的所有元素插入到另一个 List 中
+  */
+  var list = [1, 2, 3];
+  var list2 = [0, ...list];
+  assert(list2.length == 4);
+}
+*/
+//map --用来关联 keys 和 values 的对象
+void main(){
+  var gifts = {
+  // Key:    Value
+  'first': 'partridge',
+  'second': 'turtledoves',
+  'fifth': 'golden rings'
+  };
+  //map中添加键值，.length 可以获取 Map 中键值对的数量
+  gifts['fourth'] = 'calling birds';
+  var nobleGases = {
+  2: 'helium',
+  10: 'neon',
+  18: 'argon',
+  };
+}
