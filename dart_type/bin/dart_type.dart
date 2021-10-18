@@ -75,6 +75,7 @@ void main(){
 }
 */
 //map --用来关联 keys 和 values 的对象
+/*
 void main(){
   var gifts = {
   // Key:    Value
@@ -89,4 +90,31 @@ void main(){
   10: 'neon',
   18: 'argon',
   };
+}
+*/
+//函数
+/*required 来标识一个命名参数是必须的参数
+ [] 将一系列参数包裹起来作为位置参数
+*/
+//为位置参数设置默认值
+String say(String from, String msg,
+    [String device = 'carrier pigeon']) {
+  var result = '$from says $msg with a $device';
+  return result;
+}
+void main(){
+  assert(say('Bob', 'Howdy') ==
+    'Bob says Howdy with a carrier pigeon');
+  //匿名函数
+  /*只有一个参数 item 且没有参数类型的匿名方法。 
+  List 中的每个元素都会调用这个函数，
+  打印元素位置和值的字符串
+  0: apples
+  1: bananas
+  2: oranges
+  */
+  const list = ['apples', 'bananas', 'oranges'];
+  list.forEach((item) {
+      print('${list.indexOf(item)}: $item');
+      });
 }
