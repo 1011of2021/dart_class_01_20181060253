@@ -93,6 +93,7 @@ void main(){
 }
 */
 //函数
+/*
 /*required 来标识一个命名参数是必须的参数
  [] 将一系列参数包裹起来作为位置参数
 */
@@ -102,6 +103,7 @@ String say(String from, String msg,
   var result = '$from says $msg with a $device';
   return result;
 }
+
 void main(){
   assert(say('Bob', 'Howdy') ==
     'Bob says Howdy with a carrier pigeon');
@@ -118,3 +120,5 @@ void main(){
       print('${list.indexOf(item)}: $item');
       });
 }
+*/
+//类
