@@ -103,7 +103,11 @@ String say(String from, String msg,
   var result = '$from says $msg with a $device';
   return result;
 }
-
+/*
+每个 Dart 程序都必须有一个 main() 顶级函数作为程序的
+入口， main() 函数返回值为 void 并且有一个 
+List<String> 类型的可选参数。
+*/
 void main(){
   assert(say('Bob', 'Howdy') ==
     'Bob says Howdy with a carrier pigeon');
@@ -120,5 +124,53 @@ void main(){
       print('${list.indexOf(item)}: $item');
       });
 }
+//函数是一级对象,可以将函数作为参数传递给另一个函数
+void printElement(int element) {
+  print(element);
+}
+var list = [1, 2, 3];
+list.forEach(printElement);
 */
-//类
+//词法作用域
+/*变量的作用域在写代码的时候就确定了，
+大括号内定义的变量只能在大括号内访问*/
+/*
+bool topLevel = true;
+void main() {
+  var insideMain = true;
+
+  void myFunction() {
+    var insideFunction = true;
+
+    void nestedFunction() {
+      var insideNestedFunction = true;
+
+      assert(topLevel);
+      assert(insideMain);
+      assert(insideFunction);
+      assert(insideNestedFunction);
+    }
+  }
+}
+*/
+//词法闭包
+/*闭包 即一个函数对象，即使函数对象的调用在它原始作用域
+之外，依然能够访问在它词法作用域内的变量。函数可以封闭定义到它作用域内的变量。
+接下来的示例中，函数 makeAdder() 捕获了变量 addBy。
+无论函数在什么时候返回，它都可以使用捕获的 addBy 变量。*/
+/*
+Function makeAdder(int addBy) {
+  return (int i) => addBy + i;
+}
+void main() {
+  // Create a function that adds 2.
+  var add2 = makeAdder(2);
+
+  // Create a function that adds 4.
+  var add4 = makeAdder(4);
+
+  assert(add2(3) == 5);
+  assert(add4(3) == 7);
+}
+*/
+//所有的函数都有返回值。没有显示返回语句的函数最后一行默认为执行 return null;
