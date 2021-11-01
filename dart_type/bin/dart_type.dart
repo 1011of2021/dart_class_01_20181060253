@@ -174,3 +174,67 @@ void main() {
 }
 */
 //所有的函数都有返回值。没有显示返回语句的函数最后一行默认为执行 return null;
+/*运算符
+在 运算符表 中，运算符的优先级按先后排列，
+即第一行优先级最高，最后一行优先级最低，
+而同一行中，最左边的优先级最高，最右边的优先级最低。
+例如：% 运算符优先级高于 == ，而 == 高于 &&。
+Dart 还支持自增自减操作。
+类型判断运算符
+as  类型转换
+is  如果对象是指定类型则返回 true
+is! 如果对象是指定类型则返回 false
+赋值运算符
+可以使用 = 来赋值，同时也可以使用 
+??= 来为值为 null 的变量赋值。
+a = value;
+b ??= value;
+*/
+/*条件表达式
+Dart 有两个特殊的运算符可以用来替代 if-else 语句：
+（1）条件 ? 表达式 1 : 表达式 2
+如果条件为 true，执行表达式 1并返回执行结果，否则执行表达式 2 并返回执行结果。
+var visibility = isPublic ? 'public' : 'private';
+（2）表达式 1 ?? 表达式 2
+如果表达式 1 为非 null 则返回其值，否则执行表达式 2 并返回其值。
+String playerName(String? name) => name ?? 'Guest';
+*/
+/*级联运算符
+级联运算符 (.., ?..) 可以让你在同一个对象上连续调用多个对象的变量或方法。
+var paint = Paint()
+  ..color = Colors.black
+  ..strokeCap = StrokeCap.round
+  ..strokeWidth = 5.0;
+等价于
+var paint = Paint();
+paint.color = Colors.black;
+paint.strokeCap = StrokeCap.round;
+paint.strokeWidth = 5.0;
+级联运算符可以嵌套
+final addressBook = (AddressBookBuilder()
+      ..name = 'jenny'
+      ..email = 'jenny@example.com'
+      ..phone = (PhoneNumberBuilder()
+            ..number = '415-555-0100'
+            ..label = 'home')
+          .build())
+    .build();
+*/
+/*流程控制语句
+if 和 else
+for 循环
+while 和 do-while 循环
+break 和 continue
+switch 和 case
+assert----断言
+在开发过程中，可以在条件表达式为 false 时使用 
+— assert(条件, 可选信息); — 语句来打断代码的执行
+assert(text != null);
+assert 的第一个参数可以是值为布尔值的任何表达式。
+如果表达式的值为 true，则断言成功，继续执行。
+如果表达式的值为 false，则断言失败
+判断 assert 是否生效
+通过在运行 Dart 程序时添加命令行参数 
+--enable-asserts 使 assert 生效
+*/
+
