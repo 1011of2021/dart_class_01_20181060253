@@ -355,3 +355,228 @@ class Point {
 如果你想在子类中提供一个与父类命名构造函数名字一样的命名构造函数，
 则需要在子类中显式地声明
 */
+/*
+调用父类非默认构造函数
+默认情况下，子类的构造函数会调用父类的匿名无参数构造方法，
+并且该调用会在子类构造函数的函数体代码执行前，如果子类构造函数还有一个 初始化列表，
+那么该初始化列表会在调用父类的该构造函数之前被执行，总的来说，这三者的调用顺序如下：
+
+初始化列表
+
+父类的无参数构造函数
+
+当前类的构造函数
+
+如果父类没有匿名无参数构造函数，那么子类必须调用父类的其中一个构造函数，
+为子类的构造函数指定一个父类的构造函数只需在构造函数体前使用（:）指定。
+Employee 类的构造函数调用了父类 Person 的命名构造函数。
+class Person {
+  String? firstName;
+
+  Person.fromJson(Map data) {
+    print('in Person');
+  }
+}
+
+class Employee extends Person {
+  // Person does not have a default constructor;
+  // you must call super.fromJson(data).
+  Employee.fromJson(Map data) : super.fromJson(data) {
+    print('in Employee');
+  }
+}
+
+void main() {
+  var employee = Employee.fromJson({});
+  print(employee);
+  // Prints:
+  // in Person
+  // in Employee
+  // Instance of 'Employee'
+}
+*/ 
+//初始化列表
+/*
+除了调用父类构造函数之外，还可以在构造函数体执行之前初始化实例变量。
+每个实例变量之间使用逗号分隔。
+Point.fromJson(Map<String, double> json)
+    : x = json['x']!,
+      y = json['y']! {
+  print('In Point.fromJson(): ($x, $y)');
+}
+*/
+//重定向构造函数
+/*
+有时候类中的构造函数仅用于调用类中其它的构造函数，此时该构造函数没
+有函数体，只需在函数签名后使用（:）指定需要重定向到的其它构造函数 (使用 this 而非类名)：
+ class Point {
+  double x, y;
+  Point(this.x, this.y);
+  Point.alongXAxis(double x) : this(x, 0);
+}
+ */
+//常量构造函数
+/*
+如果类生成的对象都是不变的，可以在生成这些对象时就将其变为编译时常量。
+可以在类的构造函数前加上 const 关键字并确保所有实例变量均为 final 来实现该功能。
+ class ImmutablePoint {
+  static const ImmutablePoint origin = ImmutablePoint(0, 0);
+  final double x, y;
+  const ImmutablePoint(this.x, this.y);
+}
+ */
+//工厂构造函数
+/*使用 factory 关键字标识类的构造函数将会令该构造函数变为工厂构造函数，这将意味
+着使用该构造函数构造类的实例时并非总是会返回新的实例对象。例如，工厂构造
+函数可能会从缓存中返回一个实例，或者返回一个子类型的实例。
+在如下的示例中， Logger 的工厂构造函数从缓存中返回对象，和 Logger.fromJson 工
+厂构造函数从 JSON 对象中初始化一个最终变量。
+class Logger {
+  final String name;
+  bool mute = false;
+
+  // _cache is library-private, thanks to
+  // the _ in front of its name.
+  static final Map<String, Logger> _cache =
+      <String, Logger>{};
+
+  factory Logger(String name) {
+    return _cache.putIfAbsent(
+        name, () => Logger._internal(name));
+  }
+
+  factory Logger.fromJson(Map<String, Object> json) {
+    return Logger(json['name'].toString());
+  }
+
+  Logger._internal(this.name);
+
+  void log(String msg) {
+    if (!mute) print(msg);
+  }
+}
+工厂构造函数的调用方式与其他构造函数一样：
+
+var logger = Logger('UI');
+logger.log('Button clicked');
+
+var logMap = {'name': 'UI'};
+var loggerJson = Logger.fromJson(logMap);
+*/
+//方法  方法是为对象提供行为的函数。
+/**
+ * 实例方法
+ * 对象的实例方法可以访问实例变量和 this。下面的 distanceTo() 方法就是一
+ * 个实例方法的例子：
+ * import 'dart:math';
+
+class Point {
+  double x = 0;
+  double y = 0;
+
+  Point(this.x, this.y);
+
+  double distanceTo(Point other) {
+    var dx = x - other.x;
+    var dy = y - other.y;
+    return sqrt(dx * dx + dy * dy);
+  }
+ */
+//抽象方法
+/*
+实例方法、Getter 方法以及 Setter 方法都可以是抽象的，定义一个接口方法而不去做
+具体的实现让实现它的类去实现该方法，抽象方法只能存在于 抽象类中。
+ 直接使用分号（;）替代方法体即可声明一个抽象方法
+ abstract class Doer {
+  // Define instance variables and methods...
+
+  void doSomething(); // Define an abstract method.
+}
+
+class EffectiveDoer extends Doer {
+  void doSomething() {
+    // Provide an implementation, so the method is not abstract here...
+  }
+}
+ */
+//抽象类
+/* 
+使用关键字 abstract 标识类可以让该类成为 抽象类，抽象类将无法被实例化。
+抽象类常用于声明接口方法、有时也会有具体的方法实现。如果想让抽象类同时可被实例化，
+可以为其定义 工厂构造函数。
+抽象类常常会包含 抽象方法。下面是一个声明具有抽象方法的抽象类示例：
+// This class is declared abstract and thus
+// can't be instantiated.
+abstract class AbstractContainer {
+  // Define constructors, fields, methods...
+
+  void updateChildren(); // Abstract method.
+}
+*/
+//隐式接口
+/*
+每一个类都隐式地定义了一个接口并实现了该接口，这个接口包含所有这个
+类的实例成员以及这个类所实现的其它接口。如果想要创建一个 A 类支持调用 B 类
+的 API 且不想继承 B 类，则可以实现 B 类的接口。
+ 一个类可以通过关键字 implements 来实现一个或多个接口并实现每个接口定义的 API：
+ // A person. The implicit interface contains greet().
+class Person {
+  // In the interface, but visible only in this library.
+  final String _name;
+
+  // Not in the interface, since this is a constructor.
+  Person(this._name);
+
+  // In the interface.
+  String greet(String who) => 'Hello, $who. I am $_name.';
+}
+
+// An implementation of the Person interface.
+class Impostor implements Person {
+  String get _name => '';
+
+  String greet(String who) => 'Hi $who. Do you know who I am?';
+}
+
+String greetBob(Person person) => person.greet('Bob');
+
+void main() {
+  print(greetBob(Person('Kathy')));
+  print(greetBob(Impostor()));
+}
+如果需要实现多个类接口，可以使用逗号分割每个接口类：
+class Point implements Comparable, Location {...}
+ */
+//重写类成员
+/*
+子类可以重写父类的实例方法（包括 操作符）、 Getter 以及 Setter 方法。
+可以使用 @override 注解来表示你重写了一个成员：
+class Television {
+  // ···
+  set contrast(int value) {...}
+}
+
+class SmartTelevision extends Television {
+  @override
+  set contrast(num value) {...}
+  // ···
+}
+
+ */
+//扩展方法
+/*
+扩展方法是向现有库添加功能的一种方式。你可能已经在不知道它是扩展方法的情况
+下使用了它。例如，当您在 IDE 中使用代码完成功能时，它建议将扩展方法与常规方法一起使用。
+
+ */
+//枚举类型
+/*
+使用枚举
+使用关键字 enum 来定义枚举类型：
+enum Color { red, green, blue }
+每一个枚举值都有一个名为 index 成员变量的 Getter 方法，该方法将会返回以 0 为基准索引的位置值。例如，第一个枚举值的索引是 0 ，
+第二个枚举值的索引是 1。以此类推。
+assert(Color.red.index == 0);
+assert(Color.green.index == 1);
+assert(Color.blue.index == 2);
+ */
