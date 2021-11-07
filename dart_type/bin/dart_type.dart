@@ -624,4 +624,41 @@ class SingerDancer extends Musician with MusicalPerformer {
   // ...
 }
  */
-//类变量和方法
+//类变量和方法使用关键字 static 可以声明类变量或类方法。
+/*
+静态变量
+静态变量（即类变量）常用于声明类范围内所属的状态变量和常量：
+class Queue {
+  static const initialCapacity = 16;
+  // ···
+}
+
+void main() {
+  assert(Queue.initialCapacity == 16);
+}
+静态变量在其首次被使用的时候才被初始化
+静态方法
+静态方法（即类方法）不能对实例进行操作，因此不能使用 this。但是他们可以访问静
+态变量。如下面的例子所示，你可以在一个类上直接调用静态方法：
+import 'dart:math';
+
+class Point {
+  double x, y;
+  Point(this.x, this.y);
+
+  static double distanceBetween(Point a, Point b) {
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+    return sqrt(dx * dx + dy * dy);
+  }
+}
+
+void main() {
+  var a = Point(2, 2);
+  var b = Point(4, 4);
+  var distance = Point.distanceBetween(a, b);
+  assert(2.8 < distance && distance < 2.9);
+  print(distance);
+}
+ */
+//泛型
