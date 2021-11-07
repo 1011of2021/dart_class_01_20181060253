@@ -237,4 +237,120 @@ assert 的第一个参数可以是值为布尔值的任何表达式。
 通过在运行 Dart 程序时添加命令行参数 
 --enable-asserts 使 assert 生效
 */
+//异常
+/*抛出异常
+throw FormatException('Expected at least 1 section');
+可以抛出任意的对象
+throw 'Out of llamas!';
+捕获异常可以避免异常继续传递（重新抛出异常除外）
+try {
+  breedMoreLlamas();
+} on OutOfLlamasException {
+  buyMoreLlamas();
+}
+*/
+/*
+try {
+  breedMoreLlamas();
+} on OutOfLlamasException {
+  buyMoreLlamas();
+} on Exception catch (e) {
+  print('Unknown exception: $e');
+} catch (e) {
+  print('Something really unknown: $e');
+}
+如上述代码所示可以使用 on 或 catch 来捕获异常，使用 on
+ 来指定异常类型，使用 catch 来捕获异常对象，两者可同时使用。
+关键字 rethrow 可以将捕获的异常再次抛出：
+void misbehave() {
+  try {
+    dynamic foo = true;
+    print(foo++); // Runtime error
+  } catch (e) {
+    print('misbehave() partially handled ${e.runtimeType}.');
+    rethrow; // Allow callers to see the exception.
+  }
+}
 
+void main() {
+  try {
+    misbehave();
+  } catch (e) {
+    print('main() finished handling ${e.runtimeType}.');
+  }
+}
+*/
+//Finally
+/*无论是否抛出异常，finally 语句始终执行，如果没有指定 catch 语句来捕获异常，
+则异常会在执行完 finally 语句后抛出：
+try {
+  breedMoreLlamas();
+} finally {
+  // Always clean up, even if an exception is thrown.
+  cleanLlamaStalls();
+}
+finally 语句会在任何匹配的 catch 语句后执行：
+try {
+  breedMoreLlamas();
+} catch (e) {
+  print('Error: $e'); // Handle the exception first.
+} finally {
+  cleanLlamaStalls(); // Then clean up.
+}
+*/
+//类
+/*
+对象的 成员 由函数和数据（即 方法 和 实例变量）组成。方法的调用要通过对象来完成，
+这种方式可以访问对象的函数和数据
+使用（.）来访问对象的实例变量或方法：
+var p = Point(2, 2);
+assert(p.y == 2);
+double distance = p.distanceTo(Point(4, 4));
+使用 ?. 代替 . 可以避免因为左边表达式为 null 而导致的问题：
+var a = p?.y;
+*/
+/*
+可以使用 构造函数 来创建一个对象。构造函数的命名方式可以为 类名或类名 . 标识符的形式。
+var p1 = Point(2, 2);
+var p2 = Point.fromJson({'x': 1, 'y': 2});
+构造函数名前面的的 new 关键字是可选的
+*/
+/*
+一些类提供了常量构造函数。使用常量构造函数，在构造函数名之前加 const 关键字，
+来创建编译时常量时：
+var p = const ImmutablePoint(2, 2);
+两个使用相同构造函数相同参数值构造的编译时常量是同一个对象：
+var a = const ImmutablePoint(1, 1);
+var b = const ImmutablePoint(1, 1);
+assert(identical(a, b));
+在 常量上下文 场景中，可以省略掉构造函数或字面量前的 const 关键字
+const pointAndLine = const {
+  'point': const [const ImmutablePoint(0, 0)],
+  'line': const [const ImmutablePoint(1, 10), const ImmutablePoint(-2, 11)],
+};
+根据上下文，你可以只保留第一个 const 关键字，其余的全部省略：
+但是如果无法根据上下文判断是否可以省略 const，则不能省略掉 const 关键字，
+否则将会创建一个 非常量对象
+*/
+//构造函数
+/*
+声明一个与类名一样的函数即可声明一个构造函数（对于命名式构造函数 
+还可以添加额外的标识符）。大部分的构造函数形式是生成式构造函数，其用于创建一个类的实例：
+class Point {
+  double x = 0;
+  double y = 0;
+
+  Point(double x, double y) {
+    // There's a better way to do this, stay tuned.
+    this.x = x;
+    this.y = y;
+  }
+}
+*/
+/*
+如果你没有声明构造函数，那么 Dart 会自动生成一个无参数的构造函数并且该构造函
+数会调用其父类的无参数构造方法。
+子类不会继承父类的构造函数，如果子类没有声明构造函数，那么只会有一个默认无参数的
+构造函数。
+如果你想在子类中提供一个与父类命名构造函数名字一样的命名构造函数，
+则需要在子类中显式地声明
