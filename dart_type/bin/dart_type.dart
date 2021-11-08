@@ -662,3 +662,348 @@ void main() {
 }
  */
 //泛型
+/*
+泛型常用于需要要求类型安全的情况，但是它也会对代码运行有好处：
+适当地指定泛型可以更好地帮助代码生成。
+使用泛型可以减少代码重复。
+比如你想声明一个只能包含 String 类型的数组，你可以将该数组声明为 List<String>
+（读作“字符串类型的 list”），这样的话就可以很容易避免因为在该数组放入非 String 类变量而导致的诸多问题，同时编译器以及其他阅读代码的人都可以很容易地发现并定位问题：
+ var names = <String>[];
+names.addAll(['Seth', 'Kathy', 'Lars']);
+names.add(42); // Error
+另一个使用泛型的原因是可以减少重复代码。泛型可以让你在多个不同类型实现之间共享同一个接口声明，比如下面的例子中声明了一个类用于缓存对象的接口：
+abstract class ObjectCache {
+  Object getByKey(String key);
+  void setByKey(String key, Object value);
+}
+ 不久后你可能又会想专门为 String 类对象做一个缓存，于是又有了专门为 String 做缓存的类
+ abstract class StringCache {
+  String getByKey(String key);
+  void setByKey(String key, String value);
+}
+如果过段时间你又想为数字类型也创建一个类，那么就会有很多诸如此类的代码……
+
+这时候可以考虑使用泛型来声明一个类，让不同类型的缓存实现该类做出不同的具体实现即可：
+abstract class Cache<T> {
+  T getByKey(String key);
+  void setByKey(String key, T value);
+}
+ */
+//使用集合字面量
+/*
+List、Set 以及 Map 字面量也可以是参数化的。定义参数化的 List 只需在中括号
+前添加 <type>；定义参数化的 Map 只需要在大括号前添加 <keyType, valueType>：
+var names = <String>['Seth', 'Kathy', 'Lars'];
+var uniqueNames = <String>{'Seth', 'Kathy', 'Lars'};
+var pages = <String, String>{
+  'index.html': 'Homepage',
+  'robots.txt': 'Hints for web robots',
+  'humans.txt': 'We are people, not machines'
+};
+ */
+//使用类型参数化的构造函数
+/*
+在调用构造方法时也可以使用泛型，只需在类名后用尖括号（<...>）将一个或多个类型包裹即可：
+
+var nameSet = Set<String>.from(names);
+ */
+//泛型集合以及它们所包含的类型
+/*
+Dart的泛型类型是 固化的，这意味着即便在运行时也会保持类型信息
+var names = <String>[];
+names.addAll(['Seth', 'Kathy', 'Lars']);
+print(names is List<String>); // true
+
+ */
+//限制参数化类型
+/*有时使用泛型的时候，你可能会想限制可作为参数的泛型范围，也就是参数必须是指定类型的
+子类，这时候可以使用 extends 关键字。
+
+一种常见的非空类型处理方式，是将子类限制继承 Object （而不是默认的 Object?）。
+class Foo<T extends Object> {
+  // Any type provided to Foo for T must be non-nullable.
+}
+*/
+//使用泛型方法
+/*
+起初 Dart 只支持在类的声明时指定泛型，现在同样也可以在方法上使用泛型，称之为 泛型方法：
+T first<T>(List<T> ts) {
+  // Do some initial work or error checking, then...
+  T tmp = ts[0];
+  // Do some additional checking or processing...
+  return tmp;
+}
+方法 first<T> 的泛型 T 可以在如下地方使用：
+
+函数的返回值类型 (T)。
+
+参数的类型 (List<T>)。
+
+局部变量的类型 (T tmp)。
+ */
+//库和可见性
+/*
+import 和 library 关键字可以帮助你创建一个模块化和可共享的代码库。代码库不仅只
+是提供 API 而且还起到了封装的作用：以下划线（_）开头的成员仅在代码库中可见。 
+每个 Dart 程序都是一个库，即便没有使用关键字 library 指定。
+
+Dart 的库可以使用 包工具 来发布和部署。
+ */
+//使用库
+/*
+使用 import 来指定命名空间以便其它库可以访问。
+
+比如你可以导入代码库 dart:html 来使用 Dart Web 中相关 API：
+
+import 'dart:html';
+
+ */
+//指定库前缀
+/*
+如果你导入的两个代码库有冲突的标识符，你可以为其中一个指定前缀。比如如果 library1 
+和 library2 都有 Element 类，那么可以这么处理：
+
+import 'package:lib1/lib1.dart';
+import 'package:lib2/lib2.dart' as lib2;
+
+// Uses Element from lib1.
+Element element1 = Element();
+
+// Uses Element from lib2.
+lib2.Element element2 = lib2.Element();
+ */
+//导入库的一部分
+/*
+如果你只想使用代码库中的一部分，你可以有选择地导入代码库。例如：
+
+// Import only foo.
+import 'package:lib1/lib1.dart' show foo;
+
+// Import all names EXCEPT foo.
+import 'package:lib2/lib2.dart' hide foo;
+
+ */
+//延迟加载库
+/*
+延迟加载（也常称为 懒加载）允许应用在需要时再去加载代码库，下面是可能使用到延迟加载
+的场景：
+
+为了减少应用的初始化时间。
+
+处理 A/B 测试，比如测试各种算法的不同实现。
+
+加载很少会使用到的功能，比如可选的屏幕和对话框。
+使用 deferred as 关键字来标识需要延时加载的代码库：
+
+import 'package:greetings/hello.dart' deferred as hello;
+当实际需要使用到库中 API 时先调用 loadLibrary 函数加载库：
+
+Future<void> greet() async {
+  await hello.loadLibrary();
+  hello.printGreeting();
+}
+ */
+//实现库
+//异步支持
+/*
+Dart 代码库中有大量返回 Future 或 Stream 对象的函数，这些函数都是 异步 的，它们
+会在耗时操作（比如I/O）执行完毕前直接返回而不会等待耗时操作执行完毕。
+
+async 和 await 关键字用于实现异步编程，并且让你的代码看起来就像是同步的一样。
+ */
+//处理 Future
+/*
+可以通过下面两种方式，获得 Future 执行完成的结果：
+
+使用 async 和 await，在 异步编程 codelab 中有更多描述；
+
+使用 Future API，具体描述参考 库概览。
+
+使用 async 和 await 的代码是异步的，但是看起来有点像同步代码。例如，下面的代码使
+用 await 等待异步函数的执行结果。
+
+await lookUpVersion();
+必须在带有 async 关键字的 异步函数 中使用 await：
+
+Future<void> checkVersion() async {
+  var version = await lookUpVersion();
+  // Do something with version
+}
+使用 try、catch 以及 finally 来处理使用 await 导致的异常：
+
+try {
+  version = await lookUpVersion();
+} catch (e) {
+  // React to inability to look up the version
+}
+可以在异步函数中多次使用 await 关键字
+如果在使用 await 时导致编译错误，请确保 await 在一个异步函数中使用。例如，如果想在 
+main() 函数中使用 await，那么 main() 函数就必须使用 async 关键字标识。
+
+Future<void> main() async {
+  checkVersion();
+  print('In main: version is ${await lookUpVersion()}');
+}
+ */
+//声明异步函数
+/*
+异步函数 是函数体由 async 关键字标记的函数。
+
+将关键字 async 添加到函数并让其返回一个 Future 对象。假设有如下返回 String 对象的方法：
+
+String lookUpVersion() => '1.0.0';
+将其改为异步函数，返回值是 Future：
+
+Future<String> lookUpVersion() async => '1.0.0';
+注意，函数体不需要使用 Future API。如有必要，Dart 会创建 Future 对象。
+
+如果函数没有返回有效值，需要设置其返回类型为 Future<void>。
+
+ */
+//处理 Stream
+/*
+如果想从 Stream 中获取值，可以有两种选择：
+
+使用 async 关键字和一个 异步循环（使用 await for 关键字标识）。
+
+使用 Stream API。
+
+使用 await for 定义异步循环看起来是这样的：
+
+await for (varOrType identifier in expression) {
+  // Executes each time the stream emits a value.
+}
+表达式 的类型必须是 Stream。执行流程如下：
+
+等待直到 Stream 返回一个数据。
+
+使用 1 中 Stream 返回的数据执行循环体。
+
+重复 1、2 过程直到 Stream 数据返回完毕。
+使用 break 和 return 语句可以停止接收 Stream 数据，这样就跳出了循环并取消注册
+监听 Stream。
+
+**如果在实现异步 for 循环时遇到编译时错误，请检查确保 await for 处于异步函数中。
+ ** 例如，要在应用程序的 main() 函数中使用异步 for 循环，main() 函数体必须标记为 async：
+
+Future<void> main() async {
+  // ...
+  await for (final request in requestServer) {
+    handleRequest(request);
+  }
+  // ...
+}
+ */
+//生成器
+/*
+当你需要延迟地生成一连串的值时，可以考虑使用 生成器函数。Dart 内置支持两种形式
+的生成器方法：
+
+同步 生成器：返回一个 Iterable 对象。
+
+Synchronous generator: Returns an Iterable object.
+
+异步 生成器：返回一个 Stream 对象。
+
+通过在函数上加 sync* 关键字并将返回值类型设置为 Iterable 来实现一个 同步 生成器函数
+，在函数中使用 yield 语句来传递值：
+
+Iterable<int> naturalsTo(int n) sync* {
+  int k = 0;
+  while (k < n) yield k++;
+}
+实现 异步 生成器函数与同步类似，只不过关键字为 async* 并且返回值为 Stream：
+
+Stream<int> asynchronousNaturalsTo(int n) async* {
+  int k = 0;
+  while (k < n) yield k++;
+}
+如果生成器是递归调用的，可是使用 yield* 语句提升执行性能：
+
+Iterable<int> naturalsDownFrom(int n) sync* {
+  if (n > 0) {
+    yield n;
+    yield* naturalsDownFrom(n - 1);
+  }
+}
+
+ */
+//可调用类
+/*
+通过实现类的 call() 方法，允许使用类似函数调用的方式来使用该类的实例。
+
+在下面的示例中，WannabeFunction 类定义了一个 call() 函数，函数接受三个字符串参
+数，函数体将三个字符串拼接，字符串间用空格分割，并在结尾附加了一个感叹号。
+class WannabeFunction {
+  String call(String a, String b, String c) => '$a $b $c!';
+}
+
+var wf = WannabeFunction();
+var out = wf('Hi', 'there,', 'gang');
+
+void main() => print(out);
+ */
+//隔离区
+/*
+大多数计算机中，甚至在移动平台上，都在使用多核 CPU。为了有效利用多核性能，开发者
+一般使用共享内存的方式让线程并发地运行。然而，多线程共享数据通常会导致很多潜在的问
+题，并导致代码运行出错。
+
+为了解决多线程带来的并发问题，Dart 使用 isolate 替代线程，所有的 Dart 代码均运行在
+一个 isolate 中。每一个 isolate 有它自己的堆内存以确保其状态不被其它 isolate 访问。
+ */
+//Typedefs
+/*
+类型别名是引用某一类型的简便方法，因为其使用关键字 typedef，因此通常被称作 typedef。
+下面是一个使用 IntList 来声明和使用类型别名的例子:
+ typedef IntList = List<int>;
+IntList il = [1, 2, 3];
+类型别名可以有类型参数:
+
+typedef ListMapper<X> = Map<X, List<X>>;
+Map<String, List<String>> m1 = {}; // Verbose.
+ListMapper<String> m2 = {}; // Same thing but shorter and clearer.
+ 针对函数，在大多数情况下，我们推荐使用 内联函数类型 替代 typedefs。然而，函数的 typedefs 仍然是有用的:
+
+typedef Compare<T> = int Function(T a, T b);
+
+int sort(int a, int b) => a - b;
+
+void main() {
+  assert(sort is Compare<int>); // True!
+}
+ */
+//元数据
+/*
+使用元数据可以为代码增加一些额外的信息。元数据注解以 @ 开头，其后紧跟一个编译时
+常量（比如 deprecated）或者调用一个常量构造函数。
+
+Dart 中有两个注解是所有代码都可以使用的： @deprecated、@Deprecated 和 @override。
+你可以查阅 扩展一个类 获取有关 @override 的使用示例。下面是使用 @deprecated 的示例：
+class Television {
+  /// Use [turnOn] to turn the power on instead.
+  @Deprecated('Use turnOn instead')
+  void activate() {
+    turnOn();
+  }
+
+  /// Turns the TV's power on.
+  void turnOn() {...}
+  // ···
+}
+可以自定义元数据注解。下面的示例定义了一个带有两个参数的 @todo 注解：
+
+library todo;
+
+class Todo {
+  final String who;
+  final String what;
+
+  const Todo(this.who, this.what);
+}
+
+ */
+//注释
+//单行注释//
+//多行注释/* */
+//文档注释  文档注释以 /// 或者 /** 开始
