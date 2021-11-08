@@ -52,4 +52,110 @@ HttpRequest.getString(url).then((String result) {
   // Handle or ignore the error.
 });
 then().catchError() 组合是 try-catch 的异步版本。
+//链式异步编程
+then() 方法返回一个 Future 对象，这样就提供了一个非常好的方式让多个异步方法按顺序
+依次执行。如果用 then() 注册的回调返回一个 Future ，那么 then() 返回一个等价的 
+Future 。如果回调返回任何其他类型的值，那么 then() 会创建一个以该值完成的新 Future 。
+
+Future result = costlyQuery(url);
+result
+    .then((value) => expensiveWork(value))
+    .then((_) => lengthyComputation())
+    .then((_) => print('Done!'))
+    .catchError((exception) {
+  /* Handle exception... */
+});
+在上面的示例中，方法按下面顺序执行：
+
+costlyQuery()
+expensiveWork()
+lengthyComputation()
+//等待多个 Future
+有时代码逻辑需要调用多个异步函数，并等待它们全部完成后再继续执行。使用 Future.wait()
+ 静态方法管理多个 Future 以及等待它们完成：
+
+Future<void> deleteLotsOfFiles() async =>  ...
+Future<void> copyLotsOfFiles() async =>  ...
+Future<void> checksumLotsOfOtherFiles() async =>  ...
+
+await Future.wait([
+  deleteLotsOfFiles(),
+  copyLotsOfFiles(),
+  checksumLotsOfOtherFiles(),
+]);
+print('Done with all the long steps!');
+//Stream
+/*在 Dart API 中 Stream 对象随处可见，Stream 用来表示一系列数据。例如，HTML 中的
+按钮点击就是通过 stream 传递的。同样也可以将文件作为数据流来读取。*/
+//异步循环
+有时，可以使用异步 for 循环 await for ，来替代 Stream API 。
+下面示例函数使用 Stream 的 listen() 方法来订阅文件列表，传入一个搜索文件或目录的函数
+void main(List<String> arguments) {
+  // ...
+  FileSystemEntity.isDirectory(searchPath).then((isDir) {
+    if (isDir) {
+      final startingDir = Directory(searchPath);
+      startingDir.list().listen((entity) {
+        if (entity is File) {
+          searchFile(entity, searchTerms);
+        }
+      });
+    } else {
+      searchFile(File(searchPath), searchTerms);
+    }
+  });
+}
+//监听流数据（stream data）
+使用 await for 或者使用 listen() 方法监听 stream，来获取每个到达的数据流值：
+
+// Add an event handler to a button.
+submitButton.onClick.listen((e) {
+  // When the button is clicked, it runs this code.
+  submitData();
+});
+//传递流数据（stream data）
+在使用流数据前需要改变数据的格式。使用 transform()方法生成具有不同类型数据的流：
+var lines = inputStream
+    .transform(utf8.decoder)
+    .transform(const LineSplitter());
+上面例子中使用了两个 transformer 。第一个使用 utf8.decoder 将整型流转换为字符串流。
+接着，使用了 LineSplitter 将字符串流转换为多行字符串流。
+//处理错误和完成
+处理错误和完成代码方式，取决于使用的是异步 for 循环（await for）还是 Stream API 。
+
+如果使用的是异步 for 循环，那么通过 try-catch 来处理错误。代码位于异步 for 循环之后，
+会在 stream 被关闭后执行。
+
+Future<void> readFileAwaitFor() async {
+  var config = File('config.txt');
+  Stream<List<int>> inputStream = config.openRead();
+
+  var lines = inputStream
+      .transform(utf8.decoder)
+      .transform(const LineSplitter());
+  try {
+    await for (final line in lines) {
+      print('Got ${line.length} characters from stream');
+    }
+    print('file is now closed');
+  } catch (e) {
+    print(e);
+  }
+}
+如果使用的是 Stream API，那么通过注册 onError 监听来处理错误。
+代码位于注册的 onDone 中，会在 stream 被关闭后执行。
+
+var config = File('config.txt');
+Stream<List<int>> inputStream = config.openRead();
+
+inputStream
+    .transform(utf8.decoder)
+    .transform(const LineSplitter())
+    .listen((String line) {
+  print('Got ${line.length} characters from stream');
+}, onDone: () {
+  print('file is now closed');
+}, onError: (e) {
+  print(e);
+});
  */
