@@ -4,7 +4,7 @@ Iterable<String> thingsTodo() sync* {
     print('hello ${i + 1}');
   }
  }
- LIElement newLI(String itemText) => LIElement()..text = itemText;
+LIElement newLI(String itemText) => LIElement()..text = itemText;
 void main() {
   querySelector('#output')?.children.addAll(thingsTodo().map(newLI));
 }
