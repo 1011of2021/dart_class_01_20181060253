@@ -1,11 +1,19 @@
-//数字--int,double
-/*
+
+void enableFlags({bool? bold, bool? hidden}) {}
+Function makeAdder(int addBy) {
+  return (int i) => addBy + i;
+}
+foo() {}
+
 void main() {
+//数字--int,double
+
   var a=1.4;
   int x = 1;
   double y = 1.1;
   num z = 0;
   print('$x ,$y ,$z ');
+
   //字符串和数字之间转换
   var one = int.parse('1');
   assert(one == 1);
@@ -16,11 +24,10 @@ void main() {
   String piAsString = 3.14159.toStringAsFixed(2);
   assert(piAsString == '3.14');
   print('$one ,$onePointOne ,$oneAsString ,$piAsString ');
-}
-*/
+
+
 //字符串--String
-/*
-void main() {
+
   var s = 'string interprolation';
   /*
     在字符串中,以 ${表达式} 的形式使用表达式,
@@ -48,55 +55,67 @@ void main() {
   var s5 = r'''在 raw 字符串中，
       转义字符串 \n 会直接输出 “\n” 
       而不是转义为换行。''';    
-}
-*/
+
 //布尔
-/*
-不允许使用类似 if (nonbooleanValue) 或者 assert (nonbooleanValue) 
-这样的代码检查布尔值,应该总是显示地检查布尔值
-void main() {
+
+/*不允许使用类似 if (nonbooleanValue) 或者 assert (nonbooleanValue) 
+这样的代码检查布尔值,应该总是显示地检查布尔值*/
+
   var fullName = '';
   assert(fullName.isEmpty);
   var hitPoints = 0;
   assert(hitPoints <= 0);
   var unicorn;
   assert(unicorn == null);
-}
-*/
+
 //数组--list
-/*
-void main(){
+
   /*使用扩展操作符（...）
   将一个 List 中的所有元素插入到另一个 List 中
   */
   var list = [1, 2, 3];
   var list2 = [0, ...list];
   assert(list2.length == 4);
-}
-*/
+
 //map --用来关联 keys 和 values 的对象
-/*
-void main(){
   var gifts = {
   // Key:    Value
   'first': 'partridge',
   'second': 'turtledoves',
   'fifth': 'golden rings'
   };
-  //map中添加键值，.length 可以获取 Map 中键值对的数量
+  //使用 Map 的构造器创建 Map：
+  var gifts1 = Map<String, String>();
+  gifts1['first'] = 'partridge';
+  gifts1['second'] = 'turtledoves';
+  gifts1['fifth'] = 'golden rings';
+  gifts1['fourth'] = 'calling birds';
+  //Map 中添加键值对
   gifts['fourth'] = 'calling birds';
-  var nobleGases = {
+  //从一个 Map 中获取一个值
+  assert(gifts['first'] == 'partridge');
+  //.length 可以获取 Map 中键值对的数量
+  assert(gifts.length == 4);
+  // Map 字面量前添加 const 关键字可以创建一个 Map 编译时常量：
+  final constantMap = const {
   2: 'helium',
   10: 'neon',
   18: 'argon',
-  };
-}
-*/
+};
 //函数
 /*
-/*required 来标识一个命名参数是必须的参数
- [] 将一系列参数包裹起来作为位置参数
+Dart 是一种真正面向对象的语言，所以即便函数也是对象并且类型为 Function,
+这意味着函数可以被赋值给变量或者作为其它函数的参数
 */
+//当你调用函数时，可以使用 参数名: 参数值 的形式来指定命名参数。
+
+enableFlags(bold: true, hidden: false);
+/*
+命名参数默认为可选参数，除非他们被特别标记为 required。
+required 来标识一个命名参数是必须的参数，此时调用者必须为该参数提供一个值
+*/
+
+ //[] 将一系列参数包裹起来作为位置参数
 //为位置参数设置默认值
 String say(String from, String msg,
     [String device = 'carrier pigeon']) {
@@ -108,10 +127,21 @@ String say(String from, String msg,
 入口， main() 函数返回值为 void 并且有一个 
 List<String> 类型的可选参数。
 */
-void main(){
-  assert(say('Bob', 'Howdy') ==
-    'Bob says Howdy with a carrier pigeon');
+//可以将函数作为参数传递给另一个函数,也可以将函数赋值给一个变量
   //匿名函数
+  /*
+  大多数方法都是有名字的，比如 main() 或 printElement()。
+  你可以创建一个没有名字的方法
+  匿名方法看起来与命名方法类似，在括号之间可以定义参数，参数之间用逗号分割。
+  后面大括号中的内容则为函数体：
+([[类型] 参数[, …]]) {
+  函数体;
+};
+  */
+  //下面代码定义了只有一个参数 item 且没有参数类型的匿名方法
+  list.forEach((item) {
+    print('${list.indexOf(item)}: $item');
+  });
   /*只有一个参数 item 且没有参数类型的匿名方法。 
   List 中的每个元素都会调用这个函数，
   打印元素位置和值的字符串
@@ -119,71 +149,24 @@ void main(){
   1: bananas
   2: oranges
   */
-  const list = ['apples', 'bananas', 'oranges'];
-  list.forEach((item) {
-      print('${list.indexOf(item)}: $item');
-      });
 }
-//函数是一级对象,可以将函数作为参数传递给另一个函数
-void printElement(int element) {
-  print(element);
-}
-var list = [1, 2, 3];
-list.forEach(printElement);
-*/
-//词法作用域
-/*变量的作用域在写代码的时候就确定了，
-大括号内定义的变量只能在大括号内访问*/
-/*
-bool topLevel = true;
-void main() {
-  var insideMain = true;
 
-  void myFunction() {
-    var insideFunction = true;
+//词法作用域,与 Java 类似
 
-    void nestedFunction() {
-      var insideNestedFunction = true;
-
-      assert(topLevel);
-      assert(insideMain);
-      assert(insideFunction);
-      assert(insideNestedFunction);
-    }
-  }
-}
-*/
 //词法闭包
-/*闭包 即一个函数对象，即使函数对象的调用在它原始作用域
-之外，依然能够访问在它词法作用域内的变量。函数可以封闭定义到它作用域内的变量。
-接下来的示例中，函数 makeAdder() 捕获了变量 addBy。
-无论函数在什么时候返回，它都可以使用捕获的 addBy 变量。*/
 /*
-Function makeAdder(int addBy) {
-  return (int i) => addBy + i;
-}
-void main() {
-  // Create a function that adds 2.
-  var add2 = makeAdder(2);
-
-  // Create a function that adds 4.
-  var add4 = makeAdder(4);
-
-  assert(add2(3) == 5);
-  assert(add4(3) == 7);
-}
+一个函数对象，即使函数对象的调用在它原始作用域之外，依然能够访问在它词法作用域
+内的变量。
 */
+/*
+接下来的示例中，函数 makeAdder() 捕获了变量 addBy。
+无论函数在什么时候返回，它都可以使用捕获的 addBy 变量。
+*/
+  var add2 = makeAdder(2);
 //所有的函数都有返回值。没有显示返回语句的函数最后一行默认为执行 return null;
-/*运算符
-在 运算符表 中，运算符的优先级按先后排列，
-即第一行优先级最高，最后一行优先级最低，
-而同一行中，最左边的优先级最高，最右边的优先级最低。
-例如：% 运算符优先级高于 == ，而 == 高于 &&。
-Dart 还支持自增自减操作。
-类型判断运算符
-as  类型转换
-is  如果对象是指定类型则返回 true
-is! 如果对象是指定类型则返回 false
+  //assert(foo() == null);
+///运算符
+/*
 赋值运算符
 可以使用 = 来赋值，同时也可以使用 
 ??= 来为值为 null 的变量赋值。
@@ -194,23 +177,27 @@ b ??= value;
 Dart 有两个特殊的运算符可以用来替代 if-else 语句：
 （1）条件 ? 表达式 1 : 表达式 2
 如果条件为 true，执行表达式 1并返回执行结果，否则执行表达式 2 并返回执行结果。
-var visibility = isPublic ? 'public' : 'private';
+*/
+//var visibility = isPublic ? 'public' : 'private';
+/*
 （2）表达式 1 ?? 表达式 2
 如果表达式 1 为非 null 则返回其值，否则执行表达式 2 并返回其值。
-String playerName(String? name) => name ?? 'Guest';
 */
+String playerName(String? name) => name ?? 'Guest';
 /*级联运算符
 级联运算符 (.., ?..) 可以让你在同一个对象上连续调用多个对象的变量或方法。
+*/
+/*
 var paint = Paint()
   ..color = Colors.black
   ..strokeCap = StrokeCap.round
   ..strokeWidth = 5.0;
-等价于
-var paint = Paint();
-paint.color = Colors.black;
-paint.strokeCap = StrokeCap.round;
-paint.strokeWidth = 5.0;
-级联运算符可以嵌套
+//等价于
+var paint1 = Paint();
+paint1.color = Colors.black;
+paint1.strokeCap = StrokeCap.round;
+paint1.strokeWidth = 5.0;
+//级联运算符可以嵌套
 final addressBook = (AddressBookBuilder()
       ..name = 'jenny'
       ..email = 'jenny@example.com'
@@ -238,8 +225,8 @@ assert 的第一个参数可以是值为布尔值的任何表达式。
 --enable-asserts 使 assert 生效
 */
 //异常
-/*抛出异常
-throw FormatException('Expected at least 1 section');
+//抛出异常
+/*throw FormatException('Expected at least 1 section');
 可以抛出任意的对象
 throw 'Out of llamas!';
 捕获异常可以避免异常继续传递（重新抛出异常除外）
@@ -394,7 +381,7 @@ void main() {
   // in Employee
   // Instance of 'Employee'
 }
-*/ 
+*/
 //初始化列表
 /*
 除了调用父类构造函数之外，还可以在构造函数体执行之前初始化实例变量。
@@ -1007,3 +994,4 @@ class Todo {
 //单行注释//
 //多行注释/* */
 //文档注释  文档注释以 /// 或者 /** 开始
+
