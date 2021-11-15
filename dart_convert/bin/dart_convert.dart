@@ -1,14 +1,17 @@
+/*
 //dart:convert - 编解码JSON，UTF-8等
 /*
 dart:convert 库（API reference）提供 JSON 和 UTF-8 转换器，以及创建其他转换器。 
 JSON 是一种用于表示结构化对象和集合的简单文本格式。
 UTF-8 是一种常见的可变宽度编码，可以表示Unicode字符集中的每个字符。
 使用时，通过 import dart:convert 引入。
-import 'dart:convert';
 */
-//编解码JSON
-/*使用 jsonDecode() 解码 JSON 编码的字符串为 Dart 对象：
+import 'dart:convert';
 
+void main() {
+//编解码JSON
+//使用 jsonDecode() 解码 JSON 编码的字符串为 Dart 对象：
+/*
 var jsonString = '''
   [
     {"score": 40},
@@ -71,5 +74,7 @@ List<int> encoded = utf8.encode('Îñţérñåţîöñåļîžåţîờñ');
 assert(encoded.length == utf8Bytes.length);
 for (int i = 0; i < encoded.length; i++) {
   assert(encoded[i] == utf8Bytes[i]);
+}
+*/
 }
 */
